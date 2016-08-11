@@ -57,7 +57,12 @@ view model =
     div []
         [ h3 []
             [ text ("Total Calories: " ++ (toString model.count)) ]
-        , input [ placeholder "Enter increment", onInput UpdateInc ] []
+        , input
+            [ placeholder "Enter increment"
+            , onInput UpdateInc
+            , value (toString model.inc)
+            ]
+            []
         , button
             [ type' "button"
             , onClick AddCalorie
