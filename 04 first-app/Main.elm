@@ -4,18 +4,19 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html.App as App
+import String
 
 
 -- model
 
 
 type alias Model =
-    Int
+    { count : Int, inc : Int }
 
 
 initModel : Model
 initModel =
-    0
+    { count = 0, inc = 1 }
 
 
 
@@ -24,6 +25,7 @@ initModel =
 
 type Msg
     = AddCalorie
+    | UpdateInc String
     | Clear
 
 
@@ -31,7 +33,16 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         AddCalorie ->
-            model + 1
+            { model | count = model.count + model.inc }
+
+        UpdateInc newInc ->
+            { model
+                | inc =
+                    (String.toInt newInc
+                        |> Result.toMaybe
+                        |> Maybe.withDefault model.inc
+                    )
+            }
 
         Clear ->
             initModel
@@ -45,7 +56,8 @@ view : Model -> Html Msg
 view model =
     div []
         [ h3 []
-            [ text ("Total Calories: " ++ (toString model)) ]
+            [ text ("Total Calories: " ++ (toString model.count)) ]
+        , input [ placeholder "Enter increment", onInput UpdateInc ] []
         , button
             [ type' "button"
             , onClick AddCalorie
